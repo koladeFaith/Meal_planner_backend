@@ -67,7 +67,7 @@ exports.signin = async (request, response) => {
     const match = await bcrypt.compare(password, user.password)
     if (!match) return response.status(401).json({ message: "Incorrect password" })
     const token = jwt.sign(
-        { id: user.id, email: user.email },
+        { id: user.id, email: user.email, fullName: user.fullName },
         process.env.JWT_SECRET,
         { expiresIn: "5m" }
     );
