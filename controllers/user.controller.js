@@ -2,7 +2,7 @@ const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const nodemailer = require("nodemailer")
-
+const jwt = require('jsonwebtoken')
 exports.signup = async (request, response) => {
     try {
         const { fullName, email, password } = request.body;
@@ -35,7 +35,7 @@ exports.signup = async (request, response) => {
             html: "<p>Welcome to NutriPlan 🎉</p>",
         };
 
- 
+
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error("Email error:", error);
@@ -45,7 +45,7 @@ exports.signup = async (request, response) => {
             }
         });
 
-    
+
         return response.status(200).json({
             message: "Account registered successfully",
             status: "success",
@@ -66,8 +66,15 @@ exports.signin = async (request, response) => {
     }
     const match = await bcrypt.compare(password, user.password)
     if (!match) return response.status(401).json({ message: "Incorrect password" })
+    const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "5m" }
+    );
     response.status(200).json({
-        message: "Login successful", user,
+        message: "Login successful",
+        token,
+        user: { id: user.id, fullName: user.fullName, email: user.email },
         status: "success"
     })
 }
