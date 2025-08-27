@@ -20,39 +20,39 @@ exports.signup = async (request, response) => {
         return response.status(400).send("Email is required")
     }
 
-    // const transporter = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //         user: process.env.EMAIL_USER,
-    //         pass: process.env.EMAIL_PASSWORD
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
 
-    //     }
-    // })
-    // const mailOptions = {
-    //     from: process.env.EMAIL_USER,
-    //     to: email,
-    //     subject: "Test Email",
-    //     text: "Welcome",
-    //     html: "<p>Welcome</p>"
-    // }
-    // transporter.sendMail(mailOptions, (error, info) => {
-    //     if (error) {
-    //         console.log("Email error:", err);
-    //         response.status(400).json("Email error:", error)
-    //     }
-    //     else {
-    //         console.log("Email sent:", info.response);
-    //         response.status(200).json("Email sent:", info.response)
-    //     }
-    // })
-    // response.status(200).json({
-    //     message: "Account registered successfully",
-    //     status: "success",
-    //     data: {
-    //         user: { fullName, email },
+        }
+    })
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Test Email",
+        text: "Welcome",
+        html: "<p>Welcome</p>"
+    }
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log("Email error:", err);
+            response.status(400).json("Email error:", error)
+        }
+        else {
+            console.log("Email sent:", info.response);
+            return response.status(200).json({
+                message: "Account registered successfully",
+                status: "success",
+                data: {
+                    user: { fullName, email },
 
-    //     }
-    // });
+                }
+            });
+        }
+    })
+
 }
 exports.signin = async (request, response) => {
     const { email, password } = request.body
