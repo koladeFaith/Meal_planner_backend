@@ -8,6 +8,8 @@ dotenv.config();
 const app = express();
 app.use(express.json())
 const userRouters = require("./routes/user.route")
+const recipeRoutes = require("./routes/recipesRoutes");
+app.use("/api", recipeRoutes);
 
 
 // Middleware
